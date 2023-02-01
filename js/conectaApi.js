@@ -1,14 +1,38 @@
+//GET o get vai simplesmente pegar o que vc quer da API e mostrar
 async function listaVideos() {
-  const conexao = await fetch("http://localhost:3000/videos"); //unico parametro que o fetch pede é a url da api
+  const conexao = await fetch("http://localhost:3000/videos"); //unico parametro que o fetch pede é a url da api, assim ele reconhece como get mas o post tem que colocar
+  //então sempre que especificar como unico parametro a url da api, é entendido como GET
   const conexaoConvertida = await conexao.json();
 
+  console.log(conexaoConvertida);
+  return conexaoConvertida;
+}
+
+//POST para criar novos post no arquivo json na API
+//tudo que tá no parenteses do fetch são seus parametros primeiro a url ai virgula abre chaves e coloca o resto
+async function criaVideo(titulo, descricao, url, imagem) {
+  const conexao = await fetch("http://localhost:3000/videos", {
+    method: "POST",
+    headers: {
+      "Content-type": " application/json",
+    },
+    body: JSON.stringify({
+      titulo: titulo,
+      descricao: `${descricao} mil visualizaçoes`,
+      url: url,
+      imagem: imagem,
+    }), //aqui cria o corpo da requisição post, basicamente cria um objeto com os valores que eu quero e transforma em string porque senão só vai chegar um objeto
+    //javascript para o servidor
+  });
+  const conexaoConvertida = await conexao.json();
   return conexaoConvertida;
 }
 
 listaVideos();
 
-export const conectaApi = {
+export const conectaAPI = {
   listaVideos,
+  criaVideo,
 };
 
 //eu coloco o async para declarar que essa função vai ser assincrona, por padrão o javascript é sincrono
