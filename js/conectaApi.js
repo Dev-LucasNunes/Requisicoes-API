@@ -4,7 +4,6 @@ async function listaVideos() {
   //então sempre que especificar como unico parametro a url da api, é entendido como GET
   const conexaoConvertida = await conexao.json();
 
-  console.log(conexaoConvertida);
   return conexaoConvertida;
 }
 
@@ -24,7 +23,20 @@ async function criaVideo(titulo, descricao, url, imagem) {
     }), //aqui cria o corpo da requisição post, basicamente cria um objeto com os valores que eu quero e transforma em string porque senão só vai chegar um objeto
     //javascript para o servidor
   });
+
+  if (!conexao.ok) {
+    throw new Error("Não foi possivel enviar o vídeo");
+  }
+  //if a conexão não estiver ok (usa exclamação para negar) joga esse erro para eu catch em outro lugar
   const conexaoConvertida = await conexao.json();
+  return conexaoConvertida;
+}
+
+async function buscaVideo(termoDeBusca) {
+  const conexao = await fetch(`http://localhost:3000/videos?q=${termoDeBusca}`);
+  //aquele ?q= é como é feito para fazer uma busca de um termo na url desse servidor, então sempre coloca isso no json server
+  const conexaoConvertida = conexao.json(); //tem que converter pq as infos quem vem estão em bytes
+
   return conexaoConvertida;
 }
 
@@ -33,6 +45,7 @@ listaVideos();
 export const conectaAPI = {
   listaVideos,
   criaVideo,
+  buscaVideo,
 };
 
 //eu coloco o async para declarar que essa função vai ser assincrona, por padrão o javascript é sincrono
